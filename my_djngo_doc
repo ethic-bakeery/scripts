@@ -1,0 +1,138 @@
+#first start by creating your project name with...
+django-admin startproject my_tennis_club
+
+
+#then in your project folder creat your app with...
+py manage.py startapp <app name>
+
+#then in this app name there is file call views.url, 
+#note: Django views are Python functions that takes http requests and returns http response, like HTML documents
+
+#start by importing...
+'from django.http import HttpResponse'
+
+#then state your views and functions...
+def members(request):
+    return HttpResponse("Hello world!")
+
+#Create a file named urls.py in the same folder as the views.py file, and type this code in it:
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('func_name/', views.func_name, name='rep_name'),
+]
+#Note: whatever function you created you must give its name here.
+#Note: the urls.py thats created is strickly for the app name.
+
+#therefore you should go to the main project name under urls.py and created some routing 
+#for proper communication,procedures is below...
+#go to under prject, open urls.py...
+#open that file and add the include module in the import statement, and also add a path() function in the urlpatterns[]
+#it should look like this 
+#Note: make sure its under your main_project folder
+
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path('', include('func_name.urls')),
+    path('admin/', admin.site.urls),
+]
+
+#TEMPLATES
+#for whatever reason, django display pages, to do that create a tamplates inside your app name,
+#then create you html files inside your templates.
+
+#MODELS
+#To create a model, navigate to the models.py file in the /app name/ folder.
+#Open it, and add a Member table by creating a Member class, and describe the table fields in it:
+#example.
+
+from django.db import models
+
+class Member(models.Model):
+  firstname = models.CharField(max_length=255) #store user first name
+  lastname = models.CharField(max_length=255) #store user last name
+
+#by default django create an empty database for us store in project_name folder with name db.SQLite3
+#By default, all Models created in the Django project will be created as tables in this database.
+#when models are created a user need to go to a terminal under project_name folder and run "python main.py makemigrations app_name"
+#
+#
+#by default django provide auto_increment id for you but if you like you can overwrite it by creating your own id filed
+#for now do table is created, you should run "py manage.py migrate"then Django will create and execute an SQL statement,
+# based on the content of the new file in the /migrations/ folder.
+# once you run the command a table with your app name will be created.
+#
+#ADDING DATA TO OUR DATABASE
+#
+#to add some data to your created_table we can use python shell through running "py main.py shell"
+#
+#   shell commands:
+#     1. from members.models import app_name // to import your models from app name
+#     2. Member.objects.all()
+#  add some data by using
+#     3. app_name = app_name(firstname='Emil', lastname='Refsnes') // insert data in your table
+#     4. app_name.save() // save what you inserted
+#     5. app_name.objects.all().values() // query to see if the data has been inserted well
+#
+#
+#ADDING MUTLTIPLE DATA
+#replace member with your app_name
+#
+#use the same command above to query your data stored
+>>>member1 = Member(firstname='Tobias', lastname='Refsnes')
+>>> member2 = Member(firstname='Linus', lastname='Refsnes')
+>>> member3 = Member(firstname='Lene', lastname='Refsnes')
+>>> member4 = Member(firstname='Stale', lastname='Refsnes')
+>>> member5 = Member(firstname='Jane', lastname='Doe')
+>>> members_list = [member1, member2, member3, member4, member5]
+>>> for x in members_list:
+>>>   x.save() 
+
+#TO UPDATE DATA
+from members.models import Member
+x = Member.objects.all()[4] // ACCESSING element at index 4
+x.firstname // output: john
+
+#Now we can change the values of this record:
+>>> x.firstname = "Stalikken" //change firstname
+>>> x.save() //save
+
+#Execute this command to see if the Member table got updated:
+>>> Member.objects.all().values()Delete Records
+
+#To delete a record in a table, start by getting the record you want to delete:
+>>> from members.models import Member
+>>> x = Member.objects.all()[5] // record at index 5
+>>> x.firstname //output: john
+
+#Now we can delete the with
+>>> x.delete()
+#
+#
+#for whatever reason you may like to update your model, to add some columns
+#
+#for exam you added...
+phone = models.IntegerField(null=True)
+joined_date = models.DateField(null=True)
+
+#in your model, you have to make a migration for the changes to be applied.
+py manage.py makemigrations app_name
+#whatever changes you made in model run above command to apply the changes
+#
+#apply changes to you database using command below
+py manage.py migrate  
+
+""""
+  # put data in you table by specification
+   >>> from members.models import Member
+   >>> x = Member.objects.all()[0]
+   >>> x.phone = 5551234
+   >>> x.joined_date = '2022-01-05'
+   >>> x.save() 
+""""
+
+
