@@ -1,0 +1,23 @@
+to configure Apache2 on what directories it should access and other configuration
+we can qucikly look up /etc/apache2/apache2.conf
+
+
+<Directory /var/www/html>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+</directory>
+
+/var/www/html : this shows that html folder is accessible with below functions attach to it.
+
+for instance we can use apache to share files b/w systems, by putting the appropriate files in the /var/www/html folder 
+and use wget or curl or other applications to download these files on the target system.
+
+It is also possible to customize individual settings at the directory level by using the .htaccess file,
+which we can create in the directory in question. This file allows us to configure certain directory-level settings,
+such as access controls, without having to customize the Apache configuration file.
+ We can also add modules to get features like mod_rewrite, mod_security, and mod_ssl that help us improve the security of our web application.
+
+
+
+in addition sharing files can be also done via python server
